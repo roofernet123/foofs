@@ -34,7 +34,6 @@ export const metadata = generateMetadata({
     'roof inspection',
     'roof replacement',
   ],
-
   canonical: '/',
 })
 
@@ -42,28 +41,24 @@ const faqs = [
   {
     question:
       'What information is available in the RooferNet directory?',
-
     answer:
       'Listings may include a business address, telephone number, website, opening hours, rating information and other available business details. Information varies by listing and can change over time.',
   },
   {
     question:
       'How should I compare roofing contractors?',
-
     answer:
       'Compare available ratings and business information, then contact more than one contractor. Confirm licensing, insurance, experience, project scope, materials, warranties and payment terms before signing an agreement.',
   },
   {
     question:
       'Does RooferNet verify every contractor and service?',
-
     answer:
       'No. Unless a listing specifically displays a verified label, visitors should not assume that RooferNet has independently verified its credentials or service specializations. Important details should be confirmed directly.',
   },
   {
     question:
       'What does a featured contractor placement mean?',
-
     answer:
       'Featured placement is promotional visibility that may be purchased by or for a business. It is advertising and should not be interpreted as an endorsement or guarantee of workmanship.',
   },
@@ -102,7 +97,7 @@ function HomeContent({
   return (
     <>
       <FAQSchema faqs={faqs} />
-
+      
       <section className="relative flex min-h-[600px] items-center overflow-hidden">
         <div className="container relative z-10 mx-auto px-4">
           <div className="max-w-4xl">

@@ -5,6 +5,7 @@ import { contractors } from '@/lib/db/schema'
 import { and, desc, eq, sql } from 'drizzle-orm'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { LocalRoofingWeather } from '@/components/directory/LocalRoofingWeather'
 import {
   AlertTriangle,
   Award,
@@ -101,14 +102,12 @@ function formatOpeningHours(value: unknown): OpeningHour[] {
         .filter(Boolean)
         .map((line) => {
           const separatorIndex = line.indexOf(':')
-
           if (separatorIndex === -1) {
             return {
               day: '',
               hours: line,
             }
           }
-
           return {
             day: line.slice(0, separatorIndex).trim(),
             hours: line.slice(separatorIndex + 1).trim(),
@@ -542,6 +541,13 @@ export default async function ContractorPage({
             updatedAt={contractor.updatedAt}
             verified={contractor.verified}
           />
+ 
+          <LocalRoofingWeather
+              city={contractor.city || ''}
+              state={stateName}
+              latitude={hasCoordinates ? latitude : null}
+              longitude={hasCoordinates ? longitude : null}
+            />
 
           {(services.length > 0 || serviceAreas.length > 0) && (
             <section className="mt-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
@@ -578,7 +584,7 @@ export default async function ContractorPage({
                     Service areas listed
                   </h3>
 
-                  <p className="text-sm leading-relaxed text-gray-600">
+                  <p className="text-sm leading-relaxed text-gray-600">a
                     {serviceAreas.join(', ')}
                   </p>
                 </div>
