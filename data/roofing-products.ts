@@ -114,7 +114,7 @@ export const roofingProducts: RoofingProduct[] = [
 
   {
     id: 2,
-    slug: "example-roof-inspection-tool",
+    slug: "roof-inspection-tool",
     title: "Roof Inspection Tool",
     category: "roof-inspection-tools",
     image: "https://m.media-amazon.com/images/I/716OSMONYAL._AC_UL320_.jpg",
@@ -136,7 +136,7 @@ export const roofingProducts: RoofingProduct[] = [
 
   {
     id: 3,
-    slug: "example-roof-sealant",
+    slug: "roof-sealant",
     title: "Roof Sealant",
     category: "roof-sealants",
     image: "https://m.media-amazon.com/images/I/71yGQnFE0CL._AC_UY218_.jpg",
@@ -158,7 +158,7 @@ export const roofingProducts: RoofingProduct[] = [
   },
   {
     id: 4,
-    slug: "example-roof-supply",
+    slug: "roof-supply",
     title: "Roof Repair Supply",
     category: "roof-repair-supplies",
     image: "https://m.media-amazon.com/images/I/619f65vJZIL._AC_UY218_.jpg",
@@ -180,7 +180,7 @@ export const roofingProducts: RoofingProduct[] = [
   },
   {
     id: 5,
-    slug:   "example-gutter-tools",
+    slug:   "gutter-tools",
     title:  "Gutter Cleaning Tools",
     category:   "gutter-tools",
     image:  "https://m.media-amazon.com/images/I/61LW9CdAtUL._AC_UL320_.jpg",
@@ -199,7 +199,7 @@ export const roofingProducts: RoofingProduct[] = [
   },
   {
     id: 6,
-    slug:   "example-roof-cleaning-tools",
+    slug:   "roof-cleaning-tools",
     title:  "Roof Cleaning Tools",
     category:   "roof-cleaning",
     image:  "https://m.media-amazon.com/images/I/81+oOIwj9gL._AC_UL320_.jpg",
@@ -218,7 +218,7 @@ export const roofingProducts: RoofingProduct[] = [
   },
     {
     id: 7,
-    slug:   "example-measuring-tools",
+    slug:   "measuring-tools",
     title:  "Measuring Tools",
     category:   "measuring-tools",
     image:  "https://m.media-amazon.com/images/I/61jibW8kmHL._AC_UL320_.jpg",
@@ -238,7 +238,7 @@ export const roofingProducts: RoofingProduct[] = [
   },
     {
     id: 8,
-    slug:   "example-attic-ventilation",
+    slug:   "attic-ventilation",
     title:  "Attic Ventilation",
     category:   "attic-ventilation",
     image:  "https://m.media-amazon.com/images/I/71SCfCSFhgL._AC_UL320_.jpg",
@@ -258,7 +258,7 @@ export const roofingProducts: RoofingProduct[] = [
   },
   {
     id: 9,
-    slug:   "example-roofing-safety",
+    slug:   "roofing-safety",
     title:  "Roofing Safety",
     category:   "roofing-safety",
     image:  "https://m.media-amazon.com/images/I/71qP5Heoa6L._AC_UL320_.jpg",
