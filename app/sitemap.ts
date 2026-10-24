@@ -10,6 +10,9 @@ import {
 } from '@/data/roofing-products'
 import { shouldIndexContractor } from '@/lib/contractorContent'
 import { serviceGuides } from '@/lib/serviceGuides'
+import {
+  roofingTools,
+} from '@/data/roofing-tools'
 
 /**
  * Google accepts YYYY-MM-DD for sitemap lastmod values.
@@ -131,6 +134,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
   ]
+
+  const toolPages: MetadataRoute.Sitemap = [
+  {
+    url: `${baseUrl}/tools`,
+    changeFrequency:
+      'monthly',
+    priority: 0.8,
+  },
+
+  ...roofingTools.map(
+    (tool) => ({
+      url:
+        `${baseUrl}/tools/${tool.slug}`,
+
+      changeFrequency:
+        'monthly' as const,
+
+      priority:
+        tool.featured
+          ? 0.9
+          : 0.8,
+    })
+  ),
+]
 
   try {
     /*
@@ -318,6 +345,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [
       ...staticPages,
+      ...toolPages,
       ...statePages,
       ...contractorPages,
       ...blogPages,

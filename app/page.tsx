@@ -21,6 +21,8 @@ import { DirectoryDisclosure } from '@/components/directory/DirectoryDisclosure'
 import { FAQSchema } from '@/components/seo/FAQSchema'
 import AdvertiseCta from '@/components/business/AdvertiseCta'
 
+export const revalidate = 3600
+
 export const metadata = generateMetadata({
   title: 'Browse Roofing Contractors Near You',
 

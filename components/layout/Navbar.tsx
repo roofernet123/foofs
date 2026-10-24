@@ -207,6 +207,17 @@ export default function Navbar({ states = [] }: NavbarProps) {
             </Link>
 
             <Link
+                href="/tools"
+                className={`text-sm font-medium transition ${
+                  isActive('/tools')
+                    ? 'text-blue-600'
+                    : 'text-gray-700 hover:text-blue-600'
+                }`}
+              >
+                Tools
+              </Link>
+
+            <Link
               href="/blog"
               className={`text-sm font-medium transition ${
                 isActive('/blog')

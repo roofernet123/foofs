@@ -36,6 +36,8 @@ import {
   shouldIndexContractor,
 } from '@/lib/contractorContent'
 
+export const revalidate = 3600
+
 interface ContractorPageProps {
   params: Promise<{
     state: string

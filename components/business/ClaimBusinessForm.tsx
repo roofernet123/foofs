@@ -32,19 +32,27 @@ export function ClaimBusinessForm({ contractorId, contractorName, onSuccess }: C
 
     try {
       // Upload files and get URLs
-      const uploadedUrls: string[] = []
-      for (const file of files) {
-        const formDataUpload = new FormData()
-        formDataUpload.append('file', file)
-        const uploadResponse = await fetch('/api/upload', {
-          method: 'POST',
-          body: formDataUpload,
-        })
-        if (uploadResponse.ok) {
-          const { url } = await uploadResponse.json()
-          uploadedUrls.push(url)
+     const uploadedUrls: string[] = []
+
+        for (const file of files) {
+          const formDataUpload = new FormData()
+          formDataUpload.append('file', file)
+
+          const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: formDataUpload,
+          })
+
+          const uploadData = await uploadResponse.json()
+
+          if (!uploadResponse.ok) {
+            throw new Error(
+              uploadData.error || `Failed to upload ${file.name}`
+            )
+          }
+
+          uploadedUrls.push(uploadData.path)
         }
-      }
 
       const response = await fetch('/api/claims', {
         method: 'POST',
