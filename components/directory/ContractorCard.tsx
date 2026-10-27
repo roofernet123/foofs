@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { getUsefulContractorDescription } from '@/lib/contractorContent'
 import { RatingStars } from './RatingStars'
+import { CompareButton } from '@/components/directory/CompareButton'
 
 interface ContractorCardProps {
   contractor: any
@@ -337,6 +338,14 @@ export function ContractorCard({
             View full profile
           </Link>
 
+          {Number.isSafeInteger(Number(contractor.id)) &&
+              Number(contractor.id) > 0 && (
+                <CompareButton
+                  contractorId={Number(contractor.id)}  
+                  contractorName={contractorName}
+                />
+              )}
+
           {mapsUrl && (
             <a
               href={mapsUrl}
@@ -521,8 +530,20 @@ export function ContractorCard({
               Get directions
             </a>
           )}
+
+          {Number.isSafeInteger(Number(contractor.id)) &&
+          Number(contractor.id) > 0 && (
+            <CompareButton
+              contractorId={Number(contractor.id)}
+              contractorName={contractorName}
+            />
+          )}
+          
         </div>
+        
       </div>
     </article>
+
+    
   )
 }

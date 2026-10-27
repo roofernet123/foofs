@@ -207,6 +207,17 @@ export default function Navbar({ states = [] }: NavbarProps) {
             </Link>
 
             <Link
+                  href="/compare"
+                  className={`text-sm font-medium transition ${
+                    isActive('/compare')
+                      ? 'text-blue-600'
+                      : 'text-gray-700 hover:text-blue-600'
+                  }`}
+                >
+                  Compare
+            </Link>
+
+            <Link
                 href="/tools"
                 className={`text-sm font-medium transition ${
                   isActive('/tools')
@@ -326,6 +337,18 @@ export default function Navbar({ states = [] }: NavbarProps) {
               Services
             </Link>
             <BusinessActions variant="navbar" />
+
+            <Link
+                href="/compare"
+                className={`block py-2 text-sm font-medium transition ${
+                  isActive('/compare')
+                    ? 'text-blue-600'
+                    : 'text-gray-700 hover:text-blue-600'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Compare contractors
+            </Link>
 
             <Link
               href="/blog"

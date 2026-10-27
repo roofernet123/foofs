@@ -7,6 +7,8 @@ import {
   Building,
   MapPin,
   Search,
+  Calculator,
+  GitCompareArrows,
   Star,
 } from 'lucide-react'
 import { eq, sql } from 'drizzle-orm'
@@ -233,6 +235,81 @@ function HomeContent({
           </div>
         </div>
       </section>
+
+      
+      <section className="bg-blue-50/70 py-16">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold text-gray-900">
+              Roofing Tools to Help You Plan
+            </h2>
+
+            <p className="mt-4 leading-relaxed text-gray-600">
+              Compare contractor listings and estimate roofing project
+              costs with practical tools designed to help you make more
+              informed decisions.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-10 grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
+            <Link
+              href="/compare"
+              className="group rounded-2xl border border-gray-200 bg-white p-6 transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg sm:p-8"
+            >
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-100 text-blue-700 transition group-hover:bg-blue-600 group-hover:text-white">
+                <GitCompareArrows className="h-7 w-7" />
+              </div>
+
+              <h3 className="mt-5 text-xl font-bold text-gray-900 group-hover:text-blue-700">
+                Compare Roofing Contractors
+              </h3>
+
+              <p className="mt-3 leading-relaxed text-gray-600">
+                Review up to three contractors side by side. Compare
+                available ratings, locations, contact details, services
+                and other business information.
+              </p>
+
+              <span className="mt-5 inline-flex items-center gap-2 font-semibold text-blue-700">
+                Compare listings
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </Link>
+
+            <Link
+              href="/tools"
+              className="group rounded-2xl border border-gray-200 bg-white p-6 transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg sm:p-8"
+            >
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-100 text-blue-700 transition group-hover:bg-blue-600 group-hover:text-white">
+                <Calculator className="h-7 w-7" />
+              </div>
+
+              <h3 className="mt-5 text-xl font-bold text-gray-900 group-hover:text-blue-700">
+                Roofing Calculators
+              </h3>
+
+              <p className="mt-3 leading-relaxed text-gray-600">
+                Estimate roofing measurements and project costs using
+                available calculators. Use the results as a starting
+                point when planning your roofing project. The roofing calculators are for informational purposes only and do not replace a professional estimate. 
+                They include roof pitch calculator, roof area calculator, roof replacement cost estimator and material cost estimations.
+              </p>
+
+              <span className="mt-5 inline-flex items-center gap-2 font-semibold text-blue-700">
+                Explore calculators
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </Link>
+          </div>
+
+          <p className="mt-6 text-center text-sm text-gray-500">
+            Calculator results are estimates, not contractor quotes.
+            Confirm measurements, material requirements and final costs
+            with a qualified roofing professional.
+          </p>
+        </div>
+      </section>
+
 
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
