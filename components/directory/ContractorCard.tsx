@@ -1,4 +1,3 @@
-
 'use client'
 
 import Link from 'next/link'
@@ -105,14 +104,12 @@ export function ContractorCard({
         : `https://${contractor.website.trim()}`
       : null
 
-  const websiteLabel = websiteUrl
-    ? websiteUrl.replace(/^https?:\/\//i, '').replace(/\/$/, '')
-    : ''
-
   const phone =
     typeof contractor.phone === 'string' && contractor.phone.trim()
       ? contractor.phone.trim()
       : null
+
+  type Fact = { icon: typeof Clock; label: string; value: string }
 
   const facts = [
     yearsInBusiness > 0
@@ -145,11 +142,28 @@ export function ContractorCard({
           value: 'Financing',
         }
       : null,
-  ].filter(Boolean) as {
-    icon: typeof Clock
-    label: string
-    value: string
-  }[]
+  ].filter(Boolean) as Fact[]
+
+  // Detailed profile: ONE fact grid. It adds the license and insurance record,
+  // which used to live in separate "Business details" / "Business information" blocks.
+  // Emergency service is shown once, as a badge next to the rating.
+  const detailFacts: Fact[] = [
+    ...facts,
+    contractor.licenseNumber
+      ? {
+          icon: Shield,
+          label: 'License no.',
+          value: String(contractor.licenseNumber),
+        }
+      : null,
+    contractor.insuranceVerified
+      ? {
+          icon: CheckCircle,
+          label: 'Insurance',
+          value: 'Marked verified',
+        }
+      : null,
+  ].filter(Boolean) as Fact[]
 
   if (isSummary) {
     return (
@@ -307,7 +321,7 @@ export function ContractorCard({
               {contractor.licenseNumber && (
                 <span className="inline-flex items-center gap-1 text-gray-600">
                   <Shield className="h-3.5 w-3.5 shrink-0" />
-                  Licence details available
+                  License details available
                 </span>
               )}
             </div>
@@ -424,22 +438,26 @@ export function ContractorCard({
           </section>
         )}
 
-        {/* Business highlights */}
-        {facts.length > 0 && (
+        {/* Key facts: the single place for experience, estimates, warranty, financing, license, insurance */}
+        {detailFacts.length > 0 && (
           <section className="mt-5">
             <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-gray-500">
-              Business highlights
+              Key facts
             </h2>
 
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {facts.map(({ icon: Icon, label, value }) => (
+            <div
+              className={`grid grid-cols-2 gap-2 ${
+                detailFacts.length > 4 ? 'sm:grid-cols-3' : 'sm:grid-cols-4'
+              }`}
+            >
+              {detailFacts.map(({ icon: Icon, label, value }) => (
                 <div
                   key={label}
                   className="rounded-lg border border-gray-200 p-3"
                 >
                   <Icon className="mb-2 h-5 w-5 text-blue-700" />
                   <p className="text-xs text-gray-500">{label}</p>
-                  <p className="mt-1 text-sm font-semibold text-gray-900">
+                  <p className="mt-1 break-words text-sm font-semibold text-gray-900">
                     {value}
                   </p>
                 </div>
@@ -448,119 +466,7 @@ export function ContractorCard({
           </section>
         )}
 
-        {/* Contact and business details */}
-        <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-100 pt-5 md:grid-cols-2">
-          <section className="space-y-3">
-            <h2 className="text-lg font-bold text-gray-900">
-              Contact information
-            </h2>
-
-            {contractor.address && (
-              <div className="flex items-start gap-2 text-sm text-gray-600">
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
-                <span>{contractor.address}</span>
-              </div>
-            )}
-
-            {phone && (
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Phone className="h-5 w-5 shrink-0 text-blue-600" />
-                <a
-                  href={`tel:${phone}`}
-                  className="break-all hover:text-blue-700"
-                >
-                  {phone}
-                </a>
-              </div>
-            )}
-
-            {websiteUrl && (
-              <div className="flex items-start gap-2 text-sm text-gray-600">
-                <Globe className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
-                <a
-                  href={websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="break-all hover:text-blue-700"
-                >
-                  {websiteLabel}
-                </a>
-              </div>
-            )}
-
-            {!contractor.address && !phone && !websiteUrl && (
-              <p className="text-sm text-gray-500">
-                Contact details have not been provided for this listing.
-              </p>
-            )}
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-lg font-bold text-gray-900">
-              Business details
-            </h2>
-
-            {contractor.licenseNumber && (
-              <div className="flex items-start gap-2 text-sm text-gray-600">
-                <Shield className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
-                <span className="break-all">
-                  Licence: {contractor.licenseNumber}
-                </span>
-              </div>
-            )}
-
-            {contractor.insuranceVerified && (
-              <div className="flex items-center gap-2 text-sm text-green-700">
-                <CheckCircle className="h-5 w-5 shrink-0" />
-                <span>Insurance verified</span>
-              </div>
-            )}
-
-            {contractor.freeEstimates && (
-              <div className="flex items-center gap-2 text-sm text-green-700">
-                <CheckCircle className="h-5 w-5 shrink-0" />
-                <span>Free estimates available</span>
-              </div>
-            )}
-
-            {contractor.financingAvailable && (
-              <div className="flex items-center gap-2 text-sm text-green-700">
-                <Wallet className="h-5 w-5 shrink-0" />
-                <span>Financing available</span>
-              </div>
-            )}
-
-            {contractor.warrantyOffered && (
-              <div className="flex items-center gap-2 text-sm text-green-700">
-                <Shield className="h-5 w-5 shrink-0" />
-                <span>Warranty offered</span>
-              </div>
-            )}
-
-            {yearsInBusiness > 0 && (
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Clock className="h-5 w-5 shrink-0 text-blue-600" />
-                <span>
-                  {yearsInBusiness}{' '}
-                  {yearsInBusiness === 1 ? 'year' : 'years'} in business
-                </span>
-              </div>
-            )}
-
-            {!contractor.licenseNumber &&
-              !contractor.insuranceVerified &&
-              !contractor.freeEstimates &&
-              !contractor.financingAvailable &&
-              !contractor.warrantyOffered &&
-              yearsInBusiness <= 0 && (
-                <p className="text-sm text-gray-500">
-                  Additional business information has not been provided.
-                </p>
-              )}
-          </section>
-        </div>
-
-        {/* Services */}
+        {/* Services (the only place they are listed) */}
         {services.length > 0 && (
           <section className="mt-6 border-t border-gray-100 pt-5">
             <h2 className="mb-3 text-lg font-bold text-gray-900">
@@ -580,7 +486,7 @@ export function ContractorCard({
           </section>
         )}
 
-        {/* Contact actions */}
+        {/* Contact actions (phone, website and hours also appear in the sidebar) */}
         <div className="mt-6 flex flex-wrap gap-3 border-t border-gray-100 pt-5">
           {phone && (
             <a
