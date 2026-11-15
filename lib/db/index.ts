@@ -3,6 +3,7 @@ import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { createHash } from 'node:crypto'
 import * as schema from './schema'
 
 type DbGlobal = typeof globalThis & {
@@ -13,14 +14,42 @@ type DbGlobal = typeof globalThis & {
 const g = globalThis as DbGlobal
 
 function getSupabaseCaCertificate(): string {
-  // Hosting platforms: supply the certificate through an environment variable.
   const envCertificate = process.env.SUPABASE_CA_CERT
 
   if (envCertificate?.trim()) {
-    return envCertificate
+    const certificate = envCertificate
+      .replace(/\r\n/g, '\n')
+      .replace(/\\r\\n/g, '\n')
+      .replace(/\\n/g, '\n')
+      .trim()
+
+    const fingerprint = createHash('sha256')
+      .update(certificate)
+      .digest('hex')
+
+    console.log('Supabase CA diagnostic:', {
+      fingerprint,
+      length: certificate.length,
+      validHeader: certificate.startsWith(
+        '-----BEGIN CERTIFICATE-----'
+      ),
+      validFooter: certificate.endsWith(
+        '-----END CERTIFICATE-----'
+      ),
+    })
+
+    if (
+      !certificate.startsWith('-----BEGIN CERTIFICATE-----') ||
+      !certificate.endsWith('-----END CERTIFICATE-----')
+    ) {
+      throw new Error(
+        'SUPABASE_CA_CERT is not a complete PEM certificate'
+      )
+    }
+
+    return certificate
   }
 
-  // Local development: read the downloaded certificate.
   const certificatePath = join(
     process.cwd(),
     'supabase-prod-ca.crt'
