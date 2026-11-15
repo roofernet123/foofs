@@ -1,50 +1,72 @@
-// lib/db/index.ts
-import { drizzle } from 'drizzle-orm/postgres-js'
-import postgres from 'postgres'
+
+import { drizzle } from 'drizzle-orm/node-postgres'
+import { Pool } from 'pg'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import * as schema from './schema'
 
-// IMPORTANT: this must be cached on `globalThis`, not a plain module-scope
-// `let`. In Next.js dev mode, Fast Refresh re-evaluates modules when files
-// change -- a module-scope `let client = null` gets reset to `null` on
-// every one of those reloads, which silently creates a BRAND NEW postgres
-// pool (up to `max: 10` connections) on top of whichever old pool(s) are
-// still holding their connections open. A handful of hot-reloads is enough
-// to blow past Supabase's session-mode pooler cap of 15 connections --
-// which is exactly the "EMAXCONNSESSION: max clients reached" error.
-// `globalThis` survives that module re-evaluation, so the same client/pool
-// gets reused across reloads instead of leaking a new one each time.
-
 type DbGlobal = typeof globalThis & {
-  __dbClient?: postgres.Sql
-  __db?: ReturnType<typeof drizzle>
+  __dbPool?: Pool
+  __db?: ReturnType<typeof drizzle<typeof schema>>
 }
 
 const g = globalThis as DbGlobal
 
+function getSupabaseCaCertificate(): string {
+  // Hosting platforms: supply the certificate through an environment variable.
+  const envCertificate = process.env.SUPABASE_CA_CERT
+
+  if (envCertificate?.trim()) {
+    return envCertificate
+  }
+
+  // Local development: read the downloaded certificate.
+  const certificatePath = join(
+    process.cwd(),
+    'supabase-prod-ca.crt'
+  )
+
+  try {
+    return readFileSync(certificatePath, 'utf8')
+  } catch {
+    throw new Error(
+      'Missing Supabase CA certificate. Set SUPABASE_CA_CERT or provide supabase-prod-ca.crt.'
+    )
+  }
+}
+
 export function getDb() {
   if (!g.__db) {
-    if (!g.__dbClient) {
-      const connectionString = process.env.DATABASE_URL!
+    if (!g.__dbPool) {
+      const connectionString = process.env.DATABASE_URL
 
-      g.__dbClient = postgres(connectionString, {
-        // Use a smaller pool for serverless/edge
-        max: process.env.NODE_ENV === 'production' ? 3 : 10,
-        idle_timeout: 20,
-        connect_timeout: 10,
-        // For serverless, keep connections alive
-        prepare: false,
+      if (!connectionString) {
+        throw new Error('Missing DATABASE_URL environment variable')
+      }
+
+      g.__dbPool = new Pool({
+        connectionString,
+        ssl: {
+          ca: getSupabaseCaCertificate(),
+          rejectUnauthorized: true,
+        },
+        max: process.env.NODE_ENV === 'production' ? 1 : 5,
+        idleTimeoutMillis: 20000,
+        connectionTimeoutMillis: 10000,
+        allowExitOnIdle: process.env.NODE_ENV !== 'production',
       })
     }
-    g.__db = drizzle(g.__dbClient, { schema })
+
+    g.__db = drizzle(g.__dbPool, { schema })
   }
+
   return g.__db
 }
 
-// For cleanup during build
 export async function closeDb() {
-  if (g.__dbClient) {
-    await g.__dbClient.end()
-    g.__dbClient = undefined
+  if (g.__dbPool) {
+    await g.__dbPool.end()
+    g.__dbPool = undefined
     g.__db = undefined
   }
 }
