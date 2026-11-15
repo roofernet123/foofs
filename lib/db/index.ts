@@ -13,14 +13,15 @@ type DbGlobal = typeof globalThis & {
 
 const g = globalThis as DbGlobal
 
-function getSupabaseCaCertificate(): string {
-  const envCertificate = process.env.SUPABASE_CA_CERT
 
-  if (envCertificate?.trim()) {
-    const certificate = envCertificate
+function getSupabaseCaCertificate(): string {
+  const base64Certificate = process.env.SUPABASE_CA_CERT_B64
+
+  if (base64Certificate?.trim()) {
+    const certificate = Buffer
+      .from(base64Certificate.trim(), 'base64')
+      .toString('utf8')
       .replace(/\r\n/g, '\n')
-      .replace(/\\r\\n/g, '\n')
-      .replace(/\\n/g, '\n')
       .trim()
 
     const fingerprint = createHash('sha256')
@@ -42,12 +43,19 @@ function getSupabaseCaCertificate(): string {
       !certificate.startsWith('-----BEGIN CERTIFICATE-----') ||
       !certificate.endsWith('-----END CERTIFICATE-----')
     ) {
-      throw new Error(
-        'SUPABASE_CA_CERT is not a complete PEM certificate'
-      )
+      throw new Error('Invalid SUPABASE_CA_CERT_B64 certificate')
     }
 
     return certificate
+  }
+
+  const envCertificate = process.env.SUPABASE_CA_CERT
+
+  if (envCertificate?.trim()) {
+    return envCertificate
+      .replace(/\r\n/g, '\n')
+      .replace(/\\n/g, '\n')
+      .trim()
   }
 
   const certificatePath = join(
@@ -59,10 +67,11 @@ function getSupabaseCaCertificate(): string {
     return readFileSync(certificatePath, 'utf8')
   } catch {
     throw new Error(
-      'Missing Supabase CA certificate. Set SUPABASE_CA_CERT or provide supabase-prod-ca.crt.'
+      'Missing Supabase CA certificate.'
     )
   }
 }
+
 
 export function getDb() {
   if (!g.__db) {
