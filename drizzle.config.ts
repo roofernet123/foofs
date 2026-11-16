@@ -1,15 +1,19 @@
 import { defineConfig } from "drizzle-kit";
 import type { Config } from "drizzle-kit";
-import 'dotenv/config'; // Make sure your env variables are loaded
+import "dotenv/config";
+
+const migrationUrl = process.env.MIGRATION_DATABASE_URL;
+
+if (!migrationUrl) {
+  throw new Error("Missing MIGRATION_DATABASE_URL environment variable");
+}
 
 export default defineConfig({
-  schema: "./lib/db/schema.ts", // (Update this to match your schema path)
-  out: "./lib/db/migrations", // (Update this to your migration folder)
-  dialect: "postgresql", // <--- ADD THIS LINE (or "mysql" / "sqlite")
+  schema: "./lib/db/schema.ts",
+  out: "./lib/db/migrations",
+  dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    url: migrationUrl,
   },
-  // Exclude these tables from migration
-  tablesFilter: ['!faqs', '!regions', '!wineries'],
+  tablesFilter: ["!faqs", "!regions", "!wineries"],
 } satisfies Config);
-

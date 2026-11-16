@@ -14,7 +14,6 @@ import {
   uuid
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
-import { FeaturedContractors } from '@/components/directory/FeaturedContractors'
 
 export const adminUsers = pgTable('admin_users', {
   id: serial('id').primaryKey(),
