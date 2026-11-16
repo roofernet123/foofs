@@ -67,7 +67,7 @@ export const config: Config = {
 
   rateLimit: {
     action: "rate_limit",
-    windowLimit: 2,
+    windowLimit: 60,
     windowSize: 60,
     aggregateBy: ["ip", "domain"],
   },
